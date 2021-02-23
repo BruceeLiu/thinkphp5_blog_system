@@ -1,0 +1,128 @@
+{extend name="public/father" /}
+
+{block name="content"}
+<section class="Hui-article-box">
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span>系统管理
+        <span class="c-gray en">&gt;</span> 基本设置
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
+
+    <div class="Hui-article">
+        <article class="cl pd-20">
+
+                <div id="tab-system" class="HuiTab">
+                    <div class="tabBar cl">
+                        {volist name="enable_group" id="group"}
+                        <a href="javascript:getConfigs('{$group.id}')"><span>{$group.name}</span></a>
+                        {/volist}
+                    </div>
+                    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+                    <div id="configs">
+
+                        {volist name="configs_info.configInfos" id="configs"}
+                        <input type="hidden" name="id[]" value="{$configs.id}" class="input-text">
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>{$configs.key}</label>
+                            <div class="formControls col-xs-8 col-sm-9">
+                                <input type="text" name="value[]" value="{$configs.value}" class="input-text">
+                            </div>
+                        </div>
+                        {/volist}
+
+                    </div>
+                    </form>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                        <button class="btn btn-primary radius" id="save_config"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+                    </div>
+                </div>
+
+        </article>
+    </div>
+</section>
+{/block}
+
+{block name="js"}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="__STATIC__/h-ui/js/H-ui.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+        $.Huitab("#tab-system .tabBar span", "#tab-system .tabCon", "current", "click", "0");
+    });
+
+    function getConfigs(id) {
+        if (parseInt(id) === 1){
+            return location.replace(location.href)
+        }
+        $.ajax({
+            method:'GET',
+            url:"{:url('system/config/index')}",
+            data:{
+                group_id:id
+            },
+            dataType:'json',
+            success:function (data) {
+                if (data.code !== 1){
+                    alert('网络错误,请稍后重试')
+                }
+                let content = '';
+                let contentLength = (data.data.config_infos).length;
+                for (let i=0;i<contentLength;i++){
+                    content += "<input type='hidden' name='id[]' value='"+ data.data.config_infos[i].id +"' class='input-text'>";
+                    let config_name = '';
+                    if (data.data.config_infos[i].value !== null && data.data.config_infos[i].value !== 'null' && data.data.config_infos[i].value !== '' && data.data.config_infos[i].value !== undefined) {
+                        config_name = data.data.config_infos[i].value;
+                    }
+                    content += " <div class='row cl'>" +
+                        "<label class='form-label col-xs-4 col-sm-2'><span class='c-red'>*</span>"+ data.data.config_infos[i].key +"</label>" +
+                        "<div class='formControls col-xs-8 col-sm-9'>" +
+                        "<input type='text' name='value[]' value='"+ config_name +"' class='input-text'>" +
+                        "</div>" +
+                        "</div>"
+                }
+
+                document.getElementById('configs').innerHTML = content;
+
+            },
+            error:function () {
+                alert('网络错误,请稍后重试')
+            }
+        })
+    }
+
+
+    $("#save_config").on('click',function () {
+        $.ajax({
+            method:'POST',
+            url:"{:url('system/config/update')}",
+            //数据
+            data:$('form').serialize(),
+            //提交方式
+            dataType:'json',
+            success:function (data) {
+                if (data.code !== 1){
+                    alert(data.message)
+                }
+                return location.replace(location.href)
+            },
+            error:function () {
+                alert('网络错误,请稍后重试')
+            }
+        })
+    })
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}

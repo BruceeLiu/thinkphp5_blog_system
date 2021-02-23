@@ -1,0 +1,62 @@
+{extend name="public/father" /}
+
+{block name="title"}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>疫情地图展示</title>
+<style>
+    #myEcharts {
+        width: 800px;
+        height: 500px;
+        top: 15px;
+        border: solid 1px red;
+        margin: 0 auto;
+    }
+</style>
+<script src="__STATIC__/echart/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="__STATIC__/echart/js/echarts.min.js"></script>
+<script type="text/javascript" src="__STATIC__/echart/js/china.js"></script>
+{/block}
+
+{block name="content"}
+<nav class="breadcrumb">
+    <div class="container"> <i class="Hui-iconfont">&#xe67f;</i>
+        <a href="{:url('front/index/index')}" class="c-primary">首页</a>
+        <span class="c-gray en">&gt;</span>
+        <span class="c-gray">疫情情况</span>
+    </div>
+</nav>
+<section class="container">
+    <div class="container-fluid" id="myEcharts"></div>
+</section>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $.ajax({
+        type:"GET",
+        url:"{:url('front/covid/detail')}",
+        dataType:"json",
+        success:function (data) {
+            if (data.code !== 1){
+                alert(data.message)
+            }
+            let data_ = data.data.structure;
+            console.log(data_)
+            //初始化echarts实例
+            const myChart = echarts.init(document.getElementById('myEcharts'));
+            // 指定图表的配置项和数据
+            option = data_
+
+            //使用指定的配置项和数据显示图表
+            myChart.setOption(option);
+        },
+        error:function () {
+            alert("网络出错啦");
+        }
+    })
+
+
+</script>
+{/block}

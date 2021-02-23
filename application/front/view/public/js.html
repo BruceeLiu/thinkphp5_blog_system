@@ -1,0 +1,45 @@
+<script type="text/javascript" src="__STATIC__/front/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/layer/3.0/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/pifu/pifu.js"></script>
+<script type="text/javascript" src="__STATIC__/front/js/common.js"></script>
+<script> $(function () {
+    $(window).on("scroll", backToTopFun);
+    backToTopFun();
+}); </script>
+<script type="text/javascript" src="__STATIC__/front/plugin/jquery.SuperSlide/2.1.1/jquery.SuperSlide.min.js"></script>
+
+<script>
+    $(function () {
+//幻灯片
+        jQuery(".slider_main .slider").slide({
+            mainCell: ".bd ul",
+            titCell: ".hd li",
+            trigger: "mouseover",
+            effect: "leftLoop",
+            autoPlay: true,
+            delayTime: 700,
+            interTime: 2000,
+            pnLoop: true,
+            titOnClassName: "active"
+        })
+//tips
+        jQuery(".slideTxtBox").slide({
+            titCell: ".hd ul",
+            mainCell: ".bd ul",
+            autoPage: true,
+            effect: "top",
+            autoPlay: true
+        });
+//标签
+        $(".tags a").each(function () {
+            var x = 9;
+            var y = 0;
+            var rand = parseInt(Math.random() * (x - y + 1) + y);
+            $(this).addClass("tags" + rand)
+        });
+
+        $("img.lazyload").lazyload({failurelimit: 3});
+    });
+
+</script>

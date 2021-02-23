@@ -1,0 +1,31 @@
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container cl">
+            <a class="navbar-logo hidden-xs" href="{$network_base_info.network_index_url}">
+                <img class="logo" src="__STATIC__/front/img/logo3.png" alt="理想鱼博客"/>
+            </a>
+            <a class="logo navbar-logo-m visible-xs" href="{$network_base_info.network_index_url}">{$network_base_info.network_title}</a>
+            <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:void(0);"
+               onclick="showSide();">&#xe667;</a>
+            <nav class="nav navbar-nav nav-collapse w_menu" role="navigation">
+                <ul class="cl">
+                    {volist name="menu_info" id="menu"}
+                    <li class="active"><a href="{:url($menu.value)}" data-hover="{$menu.key}">{$menu.key}</a></li>
+                    {/volist}
+                </ul>
+            </nav>
+            <nav class="navbar-nav navbar-userbar hidden-xs hidden-sm " style="top: 0;">
+                <ul class="cl">
+                    <li class="userInfo dropDown dropDown_hover">
+                        <!--<a href="javascript:;" ><img class="avatar radius" src="img/40.jpg" alt="丶似浅 "></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="/app/loginOut">退出</a></li>
+                        </ul>-->
+                        <!---->
+                        <a href="{:url('admin/login/login')}">登录后台</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

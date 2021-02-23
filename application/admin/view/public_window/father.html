@@ -1,0 +1,31 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+
+<!--head头-->
+
+
+<head>
+    {include file="public_window/head" /}
+    {block name="title"}
+
+    {/block}
+</head>
+
+
+<body>
+
+{block name="content"}
+
+{/block}
+
+<!--footer头-->
+{include file="public_window/footer" /}
+
+{block name="js"}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript"></script>
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}
+</body>
+</html>

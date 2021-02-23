@@ -1,0 +1,243 @@
+{extend name="public/father" /}
+
+{block name="content"}
+<section class="container pt-20">
+    <!--<div class="Huialert Huialert-info"><i class="Hui-iconfont">&#xe6a6;</i>成功状态提示</div>-->
+    <!--left-->
+    <div class="col-sm-9 col-md-9">
+        <!--滚动图-->
+        <div class="slider_main">
+            <div class="slider">
+                <div class="bd">
+                    <ul>
+                        <li><a href="#" target="_blank"><img src="__STATIC__/front/img/temp/banner4.jpg"></a></li>
+                        <li><a href="#" target="_blank"><img src="__STATIC__/front/img/temp/banner8.png"></a></li>
+                    </ul>
+                </div>
+                <ol class="hd cl dots">
+                    <li>1</li>
+                    <li>2</li>
+                </ol>
+                <a class="slider-arrow prev" href="javascript:void(0)"></a>
+                <a class="slider-arrow next" href="javascript:void(0)"></a>
+            </div>
+        </div>
+
+        <div class="mt-20 bg-fff box-shadow radius mb-5">
+            <div class="tab-category">
+                <a href=""><strong class="current">最新发布</strong></a>
+            </div>
+        </div>
+        <div class="art_content">
+            <ul class="index_arc">
+                {volist name="article_all_info" id="article_info"}
+                {if (!empty($article_info.article_cover_url))}
+                <li class="index_arc_item">
+                    <a href="#" class="pic">
+                        <img class="lazyload" data-original="{$article_info.article_cover_url}" alt="应该选"/>
+                    </a>
+                    <h4 class="title"><a href="#">{$article_info.title}</a></h4>
+                    <div class="date_hits">
+                        <span>{$article_info.author_name}</span>
+                        <span>{$article_info.publish_time}</span>
+                        <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$article_info.click_count}° </p>
+                        <p class="commonts"><i class="Hui-iconfont" title="点击量">&#xe622;</i> <span class="cy_cmt_count">{$article_info.comment_count}</span>
+                        </p>
+                    </div>
+                    <div class="desc">
+                        {$article_info.content_summary|trim}
+                    </div>
+                </li>
+                {else /}
+                <li class="index_arc_item no_pic">
+                    <h4 class="title"><a href="{:url('front/index/detail',['id'=>$article_info.id])}" target="_blank">{$article_info.title}</a></h4>
+                    <div class="date_hits">
+                        <span>{$article_info.author_name}</span>
+                        <span>{$article_info.publish_time}</span>
+                        <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$article_info.click_count} °</p>
+                        <p class="commonts"><i class="Hui-iconfont" title="点击量">&#xe622;</i>
+                            <span id="sourceId::105" class="cy_cmt_count">{$article_info.comment_count}</span>
+                        </p>
+                    </div>
+                    <div class="desc">
+                        {$article_info.content_summary|trim}
+                    </div>
+                </li>
+                {/if}
+                {/volist}
+            </ul>
+            {if($last_article_id > 1)}
+            <div class="art_content" id="moreBlog">
+                <a class="btn  radius btn-block " href="javascript:;" onclick="moreBlog('{$last_article_id}');">点击加载更多</a>
+                <a class="btn  radius btn-block hidden" href="javascript:;">加载中……</a>
+            </div>
+            {/if}
+
+        </div>
+    </div>
+
+    <!--right-->
+    <div class="col-sm-3 col-md-3">
+
+        <!--站点声明-->
+        <div class="panel panel-default mb-20">
+            <div class="panel-body">
+                <i class="Hui-iconfont" style="float: left;">&#xe62f;&nbsp;</i>
+                <div class="slideTxtBox">
+                    <div class="bd">
+                        <ul>
+                            <li><a href="javascript:void(0);">理想咸鱼博客测试版上线，欢迎访问</a></li>
+                            <li><a href="javascript:void(0);">内容如有侵犯，请立即联系管理员删除</a></li>
+                            <li><a href="javascript:void(0);">本站内容仅供学习和参阅，不做任何商业用途</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--博主信息-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>博主信息</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <ul class="index_recd">
+                    <li class="index_recd_item"><i class="Hui-iconfont">&#xe653;</i>姓名：{$uper_info.uper_name}</li>
+                    <li class="index_recd_item"><i class="Hui-iconfont">&#xe70d;</i>职业：{$uper_info.uper_work}</li>
+                    <li class="index_recd_item"><i class="Hui-iconfont">&#xe63b;</i>邮箱：<a href="mailto:{$uper_info.uper_email}">{$uper_info.uper_email}</a>
+                    </li>
+                    <li class="index_recd_item"><i class="Hui-iconfont">&#xe671;</i>定位：{$uper_info.uper_location}</li>
+                </ul>
+            </div>
+        </div>
+
+        <!--热门推荐-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>热门推荐</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <ul class="index_recd">
+                    {volist name="recommended_lists" id="recommended_list"}
+                    <li>
+                        <a href="#">{$recommended_list.title}</a>
+                        <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe622;</i> {$recommended_list.comment_count} </p>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <!--点击排行-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>点击排行</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <ul class="index_recd clickTop">
+                    {volist name="click_lists" id="click_list"}
+                    <li>
+                        <a href="#">{$click_list.title}</a>
+                        <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$click_list.click_count} ° </p>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <!--标签-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>文章标签</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <div class="tags">
+                    {volist name="article_tags_infos" id="article_tags_info"}
+                    <a href="#">{$article_tags_info.name}</a>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+        <!--图片-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>扫我关注</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <img data-original="__STATIC__/front/temp/dream_fish_qrcode_2.jpg" class="img-responsive lazyload" alt="响应式图片">
+            </div>
+        </div>
+        <!--友情链接-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>隔壁邻居</strong></a>
+            </div>
+            <div class="tab-category-item">
+                {volist name="friendship_links" id="link"}
+                <span><i class="Hui-iconfont">&#xe6f1;</i>
+                    <a href="{$link.url}" class="btn-link" target="_blank">{$link.name}</a>
+                </span>
+                {/volist}
+            </div>
+        </div>
+    </div>
+
+</section>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    function moreBlog(id) {
+        $.ajax({
+            url:"{:url('front/index/index')}",
+            method:'get',
+            data:{
+                id:id
+            },
+            dataType:'json',
+            success:function (data) {
+                if (data.code === 1){
+                    let dataLength = (data.data.article_all_info).length;
+                    console.log(dataLength);
+                    let li = '';
+                    for(let i=0; i<dataLength; i++){
+                        if (data.data.article_all_info[i].article_cover_url === '' ||data.data.article_all_info[i].article_cover_url === null || data.data.article_all_info[i].article_cover_url === undefined){
+                            li +=  "<li class='index_arc_item no_pic'>"+"<h4 class='title'><a href='#'>" + data.data.article_all_info[i].title+ "</a></h4>"+
+                            "<div class='date_hits'>" + "<span>"+ data.data.article_all_info[i].author_name + "</span>"+
+                            "<span>" + data.data.article_all_info[i].publish_time + "</span>"+
+                            "<p class='hits'><i class='Hui-iconfont' title='点击量'>&#xe6c1;</i> "+ data.data.article_all_info[i].click_count + " °</p>"+
+                            " <p class='commonts'><i class='Hui-iconfont' title='点击量'>&#xe622;</i>"+
+                            "<span id='sourceId::105' class='cy_cmt_count'> " + data.data.article_all_info[i].comment_count + " </span>" +
+                            "</p></div>" + "<div class='desc'>" + data.data.article_all_info[i].content_summary + "</div></li>";
+                        }else {
+                            li += "<li class='index_arc_item'>"+"<a href='#' class='pic'>" + "<img class='lazyload' data-original='" + data.data.article_all_info[i].article_cover_url + "' alt='应该选'/>"+ "</a>"+
+                            "<h4 class='title'><a href='#'>" + data.data.article_all_info[i].title + "</a></h4>" +
+                            "<div class='date_hits'>" + "<span>" + data.data.article_all_info[i].author_name + "</span>" +
+                            "<span>" + data.data.article_all_info[i].publish_time + "</span>" +
+                            "<p class='hits'><i class='Hui-iconfont' title='点击量'>&#xe6c1;</i>" + data.data.article_all_info[i].click_count  + "°</p>" +
+                            "<p class='commonts'><i class='Hui-iconfont' title='点击量'>&#xe622;</i><span class='cy_cmt_count'>" + data.data.article_all_info[i].comment_count + "</span>" +
+                            "</p></div><div class='desc'>" + data.data.article_all_info[i].content_summary + "</div></li>"
+                        }
+                    }
+                    let last_a_mark = '';
+                    if (data.data.last_article_id > 1){
+                        last_a_mark = "<a class='btn  radius btn-block ' href='javascript:;' onclick='moreBlog("+ data.data.last_article_id + ");'>点击加载更多</a>" +
+                            "<a class='btn  radius btn-block hidden' href='javascript:;'>加载中……</a>"
+                    }
+                    document.getElementById('moreBlog').innerHTML = " <ul class='index_arc'>" + li + "</ul>" + last_a_mark;
+                    console.log(data)
+                }else {
+                    alert('网络错误,请稍后重试')
+                }
+            },
+            error:function () {
+                alert('网络错误,请稍后重试')
+            }
+        });
+    }
+</script>
+{/block}
+
+
+
+

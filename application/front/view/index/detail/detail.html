@@ -1,0 +1,134 @@
+{extend name="public/father" /}
+
+{block name="title"}
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+        function hideURLbar(){
+            window.scrollTo(0,1);
+        }
+        function showSide(){$('.navbar-nav').toggle();}
+    </script>
+{block}
+
+{block name="content"}
+<!--导航条-->
+<nav class="breadcrumb">
+    <div class="container"><i class="Hui-iconfont">&#xe67f;</i>
+        <a href="{:url('front/index/index')}" class="c-primary">首页</a>
+        <span class="c-gray en">&gt;</span>
+        <span class="c-gray">文章</span>
+        <span class="c-gray en">&gt;</span>
+        <span class="c-gray">{$detail.title}</span>
+    </div>
+</nav>
+
+<section class="container pt-20">
+
+    <div class="row w_main_row">
+        <div class="col-lg-9 col-md-9 w_main_left">
+            <div class="panel panel-default  mb-20">
+                <div class="panel-body pt-10 pb-10">
+                    <h2 class="c_titile">{$detail.title}</h2>
+                    <p class="box_c">
+                        <span class="d_time">发布时间：{$detail.create_time}</span>
+                        <span>编辑：<a href="mailto:1057236843@qq.com">{$detail.author_name}</a></span>
+                        <span>阅读（{$detail.article_times_count}）</span>
+                    </p>
+                       {$detail.content|raw}
+
+
+                    {if(!empty($detail.keywords))}
+                    <div class="keybq">
+                        <p><span>关键字</span>：
+                            {volist name="detail.keywords" id="keyword"}
+                            <a class="label label-default">{$keyword}</a>
+                            {/volist}
+                    </div>
+                    {/if}
+
+                    <div class="nextinfo">
+                        {if (!empty($per_article_info)) && $per_article_info.id >= 1}
+                        <p class="last">上一篇：<a href="{:url($per_article_info.url,['id'=>$per_article_info.id])}">{$per_article_info.title}</a></p>
+                        {else /}
+                        <p class="last">上一篇：没有了</p>
+                        {/if}
+                        {if (!empty($next_article_info)) && $next_article_info.id >= 1}
+                        <p class="next">下一篇：<a href="{:url($next_article_info.url,['id'=>$next_article_info.id])}">{$next_article_info.title}</a></p>
+                        {else /}
+                        <p class="next">下一篇：没有了</p>
+                        {/if}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <!--热门推荐-->
+            <div class="bg-fff box-shadow radius mb-20">
+                <div class="tab-category">
+                    <a href=""><strong>热门推荐</strong></a>
+                </div>
+                <div class="tab-category-item">
+                    <ul class="index_recd">
+                        {volist name="recommended_lists" id="recommended_list"}
+                        <li>
+                            <a href="#">{$recommended_list.title}</a>
+                            <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe622;</i> {$recommended_list.comment_count} </p>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+            </div>
+
+            <!--图片-->
+            <div class="bg-fff box-shadow radius mb-20">
+                <div class="tab-category">
+                    <a href=""><strong>扫我关注</strong></a>
+                </div>
+                <div class="tab-category-item">
+                    <img data-original="__STATIC__/front/temp/dream_fish_qrcode.jpg" class="img-responsive lazyload" alt="响应式图片">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+{/block}
+
+{block name="js"}
+<script type="text/javascript" src="__STATIC__/front/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/layer/3.0/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/pifu/pifu.js"></script>
+<script type="text/javascript" src="__STATIC__/front/js/common.js"></script>
+<script> $(function(){ $(window).on("scroll",backToTopFun); backToTopFun(); }); </script>
+<script type="text/javascript" src="__STATIC__/front/plugin/wangEditor/js/wangEditor.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("img.lazyload").lazyload({failurelimit : 3});
+
+        wangEditor.config.printLog = false;
+        var editor1 = new wangEditor('textarea1');
+        editor1.config.menus = ['insertcode', 'quote', 'bold', '|', 'img', 'emotion', '|', 'undo', 'fullscreen'];
+        editor1.config.emotions = { 'default': { title: '老王表情', data: 'plugin/wangEditor/emotions1.data'}, 'default2': { title: '老王心情', data: 'plugin/wangEditor/emotions3.data'}, 'default3': { title: '顶一顶', data: 'plugin/wangEditor/emotions2.data'}};
+        editor1.create();
+
+        //show reply
+        $(".hf").click(function () {
+            pId = $(this).attr("name");
+            $(this).parents(".commentList").find(".cancelReply").trigger("click");
+            $(this).parent(".comment-body").append($(".comment").clone(true));
+            $(this).parent(".comment-body").find(".comment").removeClass("hidden");
+            $(this).hide();
+        });
+        //cancel reply
+        $(".cancelReply").on('click',function () {
+            $(this).parents(".comment-body").find(".hf").show();
+            $(this).parents(".comment-body").find(".comment").remove();
+        });
+    });
+
+</script>
+{/block}

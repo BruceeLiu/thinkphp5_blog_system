@@ -1,0 +1,50 @@
+{extend name="public/father" /}
+
+{block name="title"}
+    <title>关于我 —  一条有理想的咸鱼php程序猿</title>
+{/block}
+
+{block name="content"}
+<!--导航条-->
+<nav class="breadcrumb">
+    <div class="container"> <i class="Hui-iconfont">&#xe67f;</i>
+        <a href="{:url('front/index/index')}" class="c-primary">首页</a>
+        <span class="c-gray en">&gt;</span>
+        <span class="c-gray">关于</span>
+    </div>
+</nav>
+
+<section class="container">
+    <div class="container-fluid">
+        <div class="about">
+            <h2>Just about me</h2>
+            <ul>
+                <p>{$uper_info.uper_desc}</p>
+            </ul>
+            <h2>About my blog</h2>
+            <ul>
+                <p>域  名：lt996.cn 注册于2020年04年13日</p>
+                <p>服务器：阿里云服务器 ，创建于2020年2月20日</p>
+                <p>备案号：{$network_base_info.network_beian_num}</p>
+                <p>本站定位为{$uper_info.uper_ding_wei}</p>
+            </ul>
+            <h2>Contact  me</h2>
+            <ul>
+                <p><i class="Hui-iconfont">&#xe67b;</i>qq : *********暂不公开 : (</p>
+                <p><i class="Hui-iconfont">&#xe6d1;</i>码云：https://gitee.com/jinjiedasheng</p>
+                <p><i class="Hui-iconfont">&#xe63b;</i>email : {$uper_info.uper_email}</p>
+            </ul>
+        </div>
+
+    </div>
+</section>
+{/block}
+
+{block name="js"}
+<script type="text/javascript" src="__STATIC__/front/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/layer/3.0/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/pifu/pifu.js"></script>
+<script type="text/javascript" src="__STATIC__/front/js/common.js"></script>
+<script> $(function(){ $(window).on("scroll",backToTopFun); backToTopFun(); }); </script>
+{/block}

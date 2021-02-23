@@ -1,0 +1,140 @@
+{extend name="public_window/father" /}
+
+{block name="title"}
+    <title>新建网站角色 - 管理员管理</title>
+{/block}
+
+{block name="content"}
+<article class="cl pd-20">
+    <form action="" method="post" class="form form-horizontal" id="form-admin-role-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="name" name="name" datatype="*4-16" nullmsg="角色名不能为空">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">角色描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="请填写当前角色的作用" id="desc" name="desc">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">网站角色：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                {volist name="auth_trees" id="auth_tree"}
+                <dl class="permission-list">
+                    <dt>
+                        <label>
+                            <input type="checkbox" value="{$auth_tree.id}" name="auth_id[]" id="user-Character[]">{$auth_tree.name}
+                        </label>
+                    </dt>
+                    {volist name="auth_tree.child" id="auth_tree_child"}
+                    <dd>
+                        <dl class="cl permission-list2">
+                            <dt>
+                                <label class="">
+                                    <input type="checkbox" value="{$auth_tree_child.id}" name="auth_id[]" id="user-Character[]"> {$auth_tree_child.name}
+                                </label>
+                            </dt>
+                            {volist name="auth_tree_child.child" id="auth_tree_child_child"}
+                            <dd>
+                                <label class="">
+                                    <input type="checkbox" value=" {$auth_tree_child_child.id}" name="auth_id[]" id="user-Character[]"> {$auth_tree_child_child.name}
+                                </label>
+                            </dd>
+                            {/volist}
+                        </dl>
+                    </dd>
+                    {/volist}
+                </dl>
+                {/volist}
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <button type="button" class="btn btn-success radius" id="create_role" name="create_role">
+                    <i class="icon-ok"></i> 确定
+                </button>
+            </div>
+        </div>
+    </form>
+</article>
+{/block}
+
+{block name="js"}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".permission-list dt input:checkbox").click(function(){
+            $(this).closest("dl").find("dd input:checkbox").prop("checked",$(this).prop("checked"));
+        });
+        $(".permission-list2 dd input:checkbox").click(function(){
+            var l =$(this).parent().parent().find("input:checked").length;
+            var l2=$(this).parents(".permission-list").find(".permission-list2 dd").find("input:checked").length;
+            if($(this).prop("checked")){
+                $(this).closest("dl").find("dt input:checkbox").prop("checked",true);
+                $(this).parents(".permission-list").find("dt").first().find("input:checkbox").prop("checked",true);
+            }
+            else{
+                if(l==0){
+                    $(this).closest("dl").find("dt input:checkbox").prop("checked",false);
+                }
+                if(l2==0){
+                    $(this).parents(".permission-list").find("dt").first().find("input:checkbox").prop("checked",false);
+                }
+            }
+        });
+
+        $("#form-admin-role-add").validate({
+            rules:{
+                roleName:{
+                    required:true,
+                },
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                $(form).ajaxSubmit();
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            }
+        });
+
+        $("#create_role").on('click',function () {
+            $.ajax({
+                //数据提交方式GET/POST，默认：POST
+                type:'POST',
+                //数据提交路径
+                url:"{:url('admin/role/create')}",
+                //数据
+                data:$('form').serialize(),
+                //提交方式
+                dataType:'json',
+                //数据返回格式
+                success:function (data) {
+                    console.log(data);
+                    if (data.code === 1){
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.$('.btn-refresh').click();
+                        parent.layer.close(index);
+                    } else{
+                        //console.log(data);
+                        alert(data.message);
+                    }
+                },
+                error:function (data) {
+                    console.log(data);
+                    alert('网络错误,请稍后重试...');
+                    $("#img").attr('src','{:url(\'admin/login/captcha\')}?'+Math.random());
+                }
+            })
+        })
+    });
+</script>
+{/block}

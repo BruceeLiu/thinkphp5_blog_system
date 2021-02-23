@@ -1,0 +1,254 @@
+{extend name="public/father" /}
+
+{block name="content"}
+
+<!--导航条-->
+<nav class="breadcrumb">
+    <div class="container">
+        <i class="Hui-iconfont">&#xe67f;</i><a href="{:url('front/index/index')}" class="c-primary">首页</a>
+        <span class="c-gray en">&gt;</span> <a href="{:url('front/article/index')}" class="c-primary">学无止尽</a>
+        <span class="c-gray en">&gt;</span>
+        <span class="c-gray" id="type_name">
+            <i class="Hui-iconfont">&#xe64b;</i>{$first_article_type_name}
+        </span>
+    </div>
+</nav>
+
+<section class="container">
+    <!--left-->
+    <div class="col-sm-9 col-md-9 mt-20" id="all_article">
+
+        <ul class="index_arc" >
+            {volist name="article_all_info" id="article_info"}
+            {if (!empty($article_info.article_cover_url))}
+            <li class="index_arc_item">
+                <a href="#" class="pic">
+                    <img class="lazyload" data-original="{$article_info.article_cover_url}" alt="应该选"/>
+                </a>
+                <h4 class="title"><a href="#">{$article_info.title}</a></h4>
+                <div class="date_hits">
+                    <span>{$article_info.author_name}</span>
+                    <span>{$article_info.publish_time}</span>
+                    <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$article_info.click_count}° </p>
+                    <p class="commonts"><i class="Hui-iconfont" title="点击量">&#xe622;</i> <span class="cy_cmt_count">{$article_info.comment_count}</span>
+                    </p>
+                </div>
+                <div class="desc">
+                    {$article_info.content_summary|trim}
+                </div>
+            </li>
+            {else /}
+            <li class="index_arc_item no_pic">
+                <h4 class="title"><a href="{:url('front/index/detail',['id'=>$article_info.id])}" target="_blank">{$article_info.title}</a></h4>
+                <div class="date_hits">
+                    <span>{$article_info.author_name}</span>
+                    <span>{$article_info.publish_time}</span>
+                    <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$article_info.click_count} °</p>
+                    <p class="commonts"><i class="Hui-iconfont" title="点击量">&#xe622;</i>
+                        <span id="sourceId::105" class="cy_cmt_count">{$article_info.comment_count}</span>
+                    </p>
+                </div>
+                <div class="desc">
+                    {$article_info.content_summary|trim}
+                </div>
+            </li>
+            {/if}
+            {/volist}
+        </ul>
+
+        <div class="art_content" id="moreBlog">
+            {if($last_article_id > 1)}
+            <a class="btn radius btn-block " href="javascript:;" onclick="moreBlogs('{$last_article_id}','{$first_article_type}');">点击加载更多</a>
+            <a class="btn radius btn-block hidden" href="javascript:;">加载中……</a>
+            {/if}
+        </div>
+    </div>
+
+    <!--right-->
+    <div class="col-sm-3 col-md-3 mt-20">
+
+        <!--导航-->
+        <div class="panel panel-primary mb-20" id="types">
+            <div class="panel-body">
+                {volist name="all_article_type" id="article_type"}
+                {if ($article_type.id == $first_article_type)}
+                <input class="btn btn-primary radius nav-btn" type="button" value="{$article_type.name}" onclick="moreBlogsTypes('{$article_type.id}')">
+                {else /}
+                <input class="btn btn-primary-outline radius nav-btn" type="button" value="{$article_type.name}" onclick="moreBlogsTypes('{$article_type.id}')">
+                {/if}
+                {/volist}
+            </div>
+        </div>
+
+        <!--热门推荐-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>热门推荐</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <ul class="index_recd">
+                    {volist name="recommended_lists" id="recommended_list"}
+                    <li>
+                        <a href="#">{$recommended_list.title}</a>
+                        <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe622;</i> {$recommended_list.comment_count} </p>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <!--标签-->
+        <div class="bg-fff box-shadow radius mb-20">
+            <div class="tab-category">
+                <a href=""><strong>文章标签</strong></a>
+            </div>
+            <div class="tab-category-item">
+                <div class="tags">
+                    {volist name="article_tags_infos" id="article_tags_info"}
+                    <a href="#">{$article_tags_info.name}</a>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{/block}
+
+{block name="js"}
+<script type="text/javascript" src="__STATIC__/front/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/layer/3.0/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__STATIC__/front/plugin/pifu/pifu.js"></script>
+<script type="text/javascript" src="__STATIC__/front/js/common.js"></script>
+<script> $(function(){ $(window).on("scroll",backToTopFun); backToTopFun(); }); </script>
+<script>
+    $(function(){
+//标签
+        $(".tags a").each(function(){
+            var x = 9;
+            var y = 0;
+            var rand = parseInt(Math.random() * (x - y + 1) + y);
+            $(this).addClass("tags"+rand)
+        });
+
+        $("img.lazyload").lazyload({failurelimit : 3});
+    });
+
+
+    function moreBlogs(id,articleType) {
+        $.ajax({
+            url:"{:url('front/article/index')}",
+            method:'get',
+            data:{
+                id:id,
+                article_type:articleType,
+                type_select:2
+            },
+            dataType:'json',
+            success:function (data) {
+                if (data.code === 1){
+                    let dataLength = (data.data.article_all_info).length;
+                    let li = '';
+                    for(let i=0; i<dataLength; i++){
+                        let arid = data.data.article_all_info[i].id;
+                        let url = "{:url('/front/index/detail/id/" + arid + "')}";
+                        if (data.data.article_all_info[i].article_cover_url === '' ||data.data.article_all_info[i].article_cover_url === null || data.data.article_all_info[i].article_cover_url === undefined){
+                            li +=  "<li class='index_arc_item no_pic'>"+"<h4 class='title'><a href="+ url +">" + data.data.article_all_info[i].title+ "</a></h4>"+
+                                "<div class='date_hits'>" + "<span>"+ data.data.article_all_info[i].author_name + "</span>"+
+                                "<span>" + data.data.article_all_info[i].publish_time + "</span>"+
+                                "<p class='hits'><i class='Hui-iconfont' title='点击量'>&#xe6c1;</i> "+ data.data.article_all_info[i].click_count + " °</p>"+
+                                " <p class='commonts'><i class='Hui-iconfont' title='点击量'>&#xe622;</i>"+
+                                "<span id='sourceId::105' class='cy_cmt_count'> " + data.data.article_all_info[i].comment_count + " </span>" +
+                                "</p></div>" + "<div class='desc'>" + data.data.article_all_info[i].content_summary + "</div></li>";
+                        }else {
+                            li += "<li class='index_arc_item'>"+"<a href='#' class='pic'>" + "<img class='lazyload' data-original='" + data.data.article_all_info[i].article_cover_url + "' alt='应该选'/>"+ "</a>"+
+                                "<h4 class='title'><a href='#'>" + data.data.article_all_info[i].title + "</a></h4>" +
+                                "<div class='date_hits'>" + "<span>" + data.data.article_all_info[i].author_name + "</span>" +
+                                "<span>" + data.data.article_all_info[i].publish_time + "</span>" +
+                                "<p class='hits'><i class='Hui-iconfont' title='点击量'>&#xe6c1;</i>" + data.data.article_all_info[i].click_count  + "°</p>" +
+                                "<p class='commonts'><i class='Hui-iconfont' title='点击量'>&#xe622;</i><span class='cy_cmt_count'>" + data.data.article_all_info[i].comment_count + "</span>" +
+                                "</p></div><div class='desc'>" + data.data.article_all_info[i].content_summary + "</div></li>"
+                        }
+                    }
+                    let last_a_mark = '';
+                    if (data.data.last_article_id > 1){
+                        last_a_mark = "<a class='btn  radius btn-block ' href='javascript:;' onclick='moreBlogs("+ data.data.last_article_id + ","+ data.data.first_article_type +");'>点击加载更多</a>" +
+                            "<a class='btn  radius btn-block hidden' href='javascript:;'>加载中……</a>"
+                    }
+                    document.getElementById('moreBlog').innerHTML = " <ul class='index_arc'>" + li + "</ul>" + last_a_mark;
+                }else {
+                    alert('网络错误,请稍后重试')
+                }
+            },
+            error:function () {
+                alert('网络错误,请稍后重试')
+            }
+        });
+    }
+
+    function moreBlogsTypes(articleType) {
+        $.ajax({
+            url:"{:url('front/article/select_type')}",
+            method:'get',
+            data:{
+                article_type:articleType
+            },
+            dataType:'json',
+            success:function (data) {
+                if (data.code !== 1){
+                    alert('网络错误,请稍后重试')
+                }
+                let dataLength = (data.data.article_all_info).length;
+                let dataTypeLength = (data.data.all_article_type).length;
+                let li = "";
+                let article_type = "";
+                li += "<ul class='index_arc'>";
+                for(let i=0; i<dataLength; i++){
+                    let arid = data.data.article_all_info[i].id;
+                    let url = "{:url('/front/index/detail/id/" + arid + "')}";
+                    if (data.data.article_all_info[i].article_cover_url === '' ||data.data.article_all_info[i].article_cover_url === null || data.data.article_all_info[i].article_cover_url === undefined){
+                        li +=  "<li class='index_arc_item no_pic'>"+"<h4 class='title'><a href="+ url +">" + data.data.article_all_info[i].title+ "</a></h4>"+
+                            "<div class='date_hits'>" + "<span>"+ data.data.article_all_info[i].author_name + "</span>"+
+                            "<span>" + data.data.article_all_info[i].publish_time + "</span>"+
+                            "<p class='hits'><i class='Hui-iconfont' title='点击量'>&#xe6c1;</i> "+ data.data.article_all_info[i].click_count + " °</p>"+
+                            " <p class='commonts'><i class='Hui-iconfont' title='点击量'>&#xe622;</i>"+
+                            "<span id='sourceId::105' class='cy_cmt_count'> " + data.data.article_all_info[i].comment_count + " </span>" +
+                            "</p></div>" + "<div class='desc'>" + data.data.article_all_info[i].content_summary + "</div></li>";
+                    }else {
+                        li += "<li class='index_arc_item'>"+"<a href='#' class='pic'>" + "<img class='lazyload' data-original='" + data.data.article_all_info[i].article_cover_url + "' alt='应该选'/>"+ "</a>"+
+                            "<h4 class='title'><a href='#'>" + data.data.article_all_info[i].title + "</a></h4>" +
+                            "<div class='date_hits'>" + "<span>" + data.data.article_all_info[i].author_name + "</span>" +
+                            "<span>" + data.data.article_all_info[i].publish_time + "</span>" +
+                            "<p class='hits'><i class='Hui-iconfont' title='点击量'>&#xe6c1;</i>" + data.data.article_all_info[i].click_count  + "°</p>" +
+                            "<p class='commonts'><i class='Hui-iconfont' title='点击量'>&#xe622;</i><span class='cy_cmt_count'>" + data.data.article_all_info[i].comment_count + "</span>" +
+                            "</p></div><div class='desc'>" + data.data.article_all_info[i].content_summary + "</div></li>"
+                    }
+                }
+                li += "</ul>";
+                let last_a_mark = "";
+                if (data.data.last_article_id > 1){
+                    last_a_mark = "<a class='btn radius btn-block ' onclick='moreBlogs("+ data.data.last_article_id + ","+ data.data.first_article_type +");'>点击加载更多</a>" +
+                        "<a class='btn radius btn-block hidden'>加载中……</a>"
+                }
+                article_type += "<div class='panel-body'>"
+                for (let i=0; i<dataTypeLength; i++){
+                    if (data.data.all_article_type[i].id === data.data.first_article_type){
+                        article_type += " <input class='btn btn-primary radius nav-btn' type='button' value='"+data.data.all_article_type[i].name+"' onclick='moreBlogsTypes("+data.data.all_article_type[i].id+")'>"
+                    }else {
+                        article_type += " <input class='btn btn-primary-outline radius nav-btn' type='button' value='"+data.data.all_article_type[i].name+"' onclick='moreBlogsTypes("+data.data.all_article_type[i].id+")'>"
+                    }
+                }
+                article_type += "</div>"
+                document.getElementById('all_article').innerHTML = li + "<div class='art_content' id='moreBlog'>" + last_a_mark + "</div>"
+                document.getElementById('type_name').innerHTML = "<i class='Hui-iconfont'>&#xe64b;</i>" + data.data.first_article_type_name
+                document.getElementById('types').innerHTML = article_type
+            },
+            error:function () {
+                alert('网络错误,请稍后重试')
+            }
+        });
+    }
+
+</script>
+{/block}
